@@ -1,0 +1,16 @@
+node_modules/
+/public/build/
+/runtime/
+/dist/
+.student-ide/
+.playwright-cli/
+/output/
+/artifacts/
+*.log
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>XunJie-StudentIDE · 编码过程实验</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230052cc'/%3E%3Ctext x='7' y='23' fill='white' font-size='21'%3E%E2%8C%98%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/build/app.css">
+  <script type="module" src="/build/app.js"></script>
+</head>
+<body>
+  <main class="workspace">
+    <header class="toolbar">
+      <div class="identity"><span class="mark" aria-hidden="true">⌘</span><div><strong>XunJie-StudentIDE</strong><span id="project">本地编码实验</span></div></div>
+      <div class="actions"><button id="save" title="保存当前文件 (Ctrl+S)">保存</button><button id="run" class="primary" title="运行当前缓冲区 (Ctrl+Enter)"><span aria-hidden="true">▶</span> 运行</button></div>
+    </header>
+    <div class="filebar">
+      <label class="file-picker"><span class="sr-only">打开文件</span><select id="files" aria-label="打开文件"><option>加载项目…</option></select></label>
+      <span id="dirty" class="file-state">已保存</span><button id="diagnostic-badge" aria-label="查看代码问题">检查中</button><button id="file-menu" popovertarget="file-actions" aria-label="文件操作">文件 ▾</button>
+    </div>
+    <div id="notice" role="alert" hidden></div>
+    <section id="editor" aria-label="代码编辑器"><p class="loading">正在加载编辑器…</p></section>
+    <section class="inspector" aria-label="运行与过程">
+      <div class="panelbar"><div role="tablist" aria-label="运行与过程视图"><button role="tab" aria-selected="true" aria-controls="output-panel" id="output-tab" data-panel="output">输出 <span id="run-badge"></span></button><button role="tab" aria-selected="false" aria-controls="problems-panel" id="problems-tab" data-panel="problems">问题 <span id="problems-count"></span></button><button role="tab" aria-selected="false" aria-controls="events-panel" id="events-tab" data-panel="events">过程 <span id="event-count">0</span></button><button role="tab" aria-selected="false" aria-controls="replay-panel" id="replay-tab" data-panel="replay">回放</button></div><button id="collapse" class="quiet" aria-label="展开底部面板" aria-expanded="false">展开</button></div>
+      <div id="panels" hidden>
+        <div id="problems-panel" role="tabpanel" aria-labelledby="problems-tab" hidden><p id="diagnostic-summary" class="muted" role="status" aria-live="polite">输入后自动检查已确认的未保存代码。</p><ol id="problems" class="problem-list"></ol></div>
+        <div id="output-panel" role="tabpanel" aria-labelledby="output-tab"><div class="run-controls"><label>标准输入 <input id="stdin" placeholder="运行前提供输入，可留空" maxlength="10000"></label><span>本机工具链，非沙箱</span></div><p id="run-summary" class="muted">运行当前确认版本；依赖使用运行前快照，编译输出保存在独立目录。</p><pre id="output" tabindex="0">运行后在这里查看结果。</pre></div>
+        <div id="events-panel" role="tabpanel" aria-labelledby="events-tab" hidden><div class="process-tools"><span id="phase-status" role="status">学生操作阶段</span><button id="phase-toggle">暂停学习并准备</button><button id="capture">暂停采集</button><a href="/api/export" download="student-ide-session.json">导出记录</a><span id="coverage">Codex Hook 尚未连接</span></div><p id="collection-scope" class="muted">来源仅表示服务入口，不证明操作者身份；旧记录来源未核实。只记录当前项目，实验代码请勿包含秘密。</p><ol id="events" class="timeline"></ol></div>
+        <div id="replay-panel" role="tabpanel" aria-labelledby="replay-tab" hidden><label class="replay-control">版本回放 <input id="replay-range" type="range" min="0" max="0" value="0"><output id="replay-label">当前文件尚无编辑记录</output></label><pre id="replay-code" tabindex="0"></pre></div>
+      </div>
+    </section>
+    <footer class="statusbar"><span id="position">行 1，列 1</span><span id="version">文本</span><span id="language-status">待检测</span><span id="sync" role="status" aria-live="polite">连接中</span></footer>
+  </main>
+  <div id="file-actions" class="file-actions" popover>
+    <button id="new-file" disabled>新建文件</button>
+    <button id="delete-file" class="danger" disabled>删除当前文件</button>
+    <button id="draft" disabled>导出当前草稿</button>
+  </div>
+  <dialog id="create-dialog" aria-labelledby="create-title">
+    <form id="create-form">
+      <h2 id="create-title">新建文件</h2>
+      <label for="file-path">文件路径</label><input id="file-path" name="path" placeholder="例如 src/helpers.py" maxlength="240" required autocomplete="off" autofocus aria-describedby="file-help file-error">
+      <p id="file-help" class="muted">在当前项目内创建空文件；同名文件不会被覆盖。</p>
+      <p id="file-error" class="form-error" role="alert"></p>
+      <div class="dialog-actions"><button id="create-cancel" type="button">取消</button><button id="create-submit" type="submit" class="primary">创建文件</button></div>
+    </form>
+  </dialog>
+  <dialog id="phase-dialog" aria-labelledby="phase-title">
+    <form method="dialog">
+      <h2 id="phase-title">暂停学习并进入准备阶段</h2>
+      <p>agent 将能够注册语言和验证工具链。当前代码、草稿及过程记录保留；采集开关保持当前状态。</p>
+      <div class="dialog-actions"><button value="cancel" autofocus>取消</button><button value="preparation" class="primary">进入准备阶段</button></div>
+    </form>
+  </dialog>
+  <dialog id="delete-dialog" aria-labelledby="delete-title">
+    <form method="dialog">
+      <h2 id="delete-title">删除当前文件</h2><p id="delete-description"></p>
+      <p class="muted">文件及未保存草稿将移入本地回收区，过程日志保留。回收位置会写入过程记录。</p>
+      <div class="dialog-actions"><button value="cancel" autofocus>取消</button><button value="archive" class="danger">移入回收区</button></div>
+    </form>
+  </dialog>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "student_ide": {
+      "command": "node",
+      "args": ["${PLUGIN_ROOT}/runtime/mcp.mjs"]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "student-ide",
+  "version": "0.6.0",
+  "description": "XunJie-StudentIDE: a local Monaco IDE with static diagnostics, prepared language profiles and replayable coding logs.",
+  "author": {
+    "name": "Local developer"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "XunJie-StudentIDE",
+    "shortDescription": "Connect languages on demand and inspect coding processes.",
+    "longDescription": "Open a local Monaco IDE in the right browser panel, register and verify project language profiles, read unsaved code, and replay compilation and execution. Journal storage is local; MCP exposes acknowledged code to the caller. This prototype is not a sandbox or an assessment system.",
+    "developerName": "Local developer",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "读取学生 IDE 已确认的代码与最近运行结果；需要准备环境时先核对会话阶段。"
+  },
+  "mcpServers": "./.mcp.json"
+}
