@@ -31,6 +31,8 @@ npm run build
 
 若锁定版本已经完整缓存，可使用 `npm ci --offline --no-audit --no-fund`。代理/证书失败时先查实际问题，不能修改全局代理、禁用 TLS 或把网络失败说成安装完成。接入 Agent 的恢复路径见[完整指南](../skills/student-ide/references/agent-guide.md)。
 
+GitHub API 可访问而 Git HTTPS 连接被重置时，检查 Git 是否使用了系统已有的健康代理；可用 `git -c http.proxy=<verifiedProxyUrl> ...` 为单次命令指定它，保持 TLS 校验。不要将本机端口、代理凭据或全局网络配置提交到源码。
+
 ## 验证
 
 ```sh

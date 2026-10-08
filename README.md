@@ -58,6 +58,8 @@ codex plugin add student-ide@xunjie-studentide
 
 在桌面端插件目录审阅并信任 Hooks，按宿主提示重新连接或在新聊天使用 `$student-ide`。准备阶段 Agent 可取得已有服务的 URL，通过 `open_in_codex` 的 browser 目标放在右侧；学生操作阶段由学生控制界面。不同宿主版本的本地插件入口可能不同，参见 [OpenAI 官方插件打包说明](https://developers.openai.com/plugins/build/plugins)。本仓库采用兼容的 `.codex-plugin/plugin.json`。
 
+同一项目只启用一份 `student-ide` 安装。已有个人来源的旧插件时，在准备阶段核对安装根目录并选择保留启用的版本，避免两套 MCP/Hooks 重复接入；独立仓库不会自动替换旧缓存。
+
 GitHub 仓库存放开发源码，**不是直接可运行的已构建安装包**。先克隆、构建、打包，再从返回的本地来源安装；不要将含 `node_modules` 的开发目录直接作为安装源。安装包需要宿主可用的 Node.js 22+，不需要运行 `npm install`。它不自动启动 IDE 服务。
 
 ## 绑定实际项目
